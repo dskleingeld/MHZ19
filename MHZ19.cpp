@@ -124,13 +124,24 @@ bool MHZ19::calibrateSpan(int span) {
 }
 
 /*
- * Read current ppm from sensor
+ * Start sensor measurement
  */
-
+void MHZ19::startMeasure() {
+  _streamRef->write(CMD_READ, 9);
+  measure_started = millis();
+}
+/*
+ * Read current ppm from sensor
+ * can only be used after starting sensor
+ */
 int MHZ19::readValue() {
   unsigned int co2 = -1;
   unsigned char response[9];
-  _streamRef->write(CMD_READ, 9);
+
+  uint32_t elapsed = millis() - measure_started;
+  if (elapsed < 500){
+    delay(500-elapsed);
+  }
 
   if (_streamRef->available()) {
     _streamRef->readBytes(response, 9);

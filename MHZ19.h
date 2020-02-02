@@ -16,6 +16,7 @@
 #define MHZ19_H
 
 #include <Arduino.h>
+#include <cstdint>
 
 class MHZ19 {
   static const int PREHEAT_TIME = 180000; // 3 mins
@@ -28,7 +29,8 @@ class MHZ19 {
     static byte CMD_ABC_ON[];
     static byte CMD_ABC_OFF[];
     static byte getCheckSum(byte *packet);
-
+    
+    uint32_t measure_started;
     bool sendCmd(byte*);
 
   public:
@@ -39,6 +41,7 @@ class MHZ19 {
     bool disableABC();
     bool calibrateZero();
     bool calibrateSpan(int);
+    void startMeasure();
     int readValue();
     bool isReady();
 };
